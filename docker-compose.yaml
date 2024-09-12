@@ -1,4 +1,20 @@
-services: 
+version: '3.9'
+
+services:
+  app:
+    build: 
+      context: ./  # Diretório onde está o Dockerfile da sua aplicação
+    container_name: app_service
+    environment:
+      DATABASE_URL: postgresql://teste:teste@postgres:5432/teste
+      MONGO_URI: mongodb://your_user:your_password@mongodb:27017/
+    depends_on:
+      - postgres
+      - mongodb
+    ports:
+      - "8083:8000"  # Altere para a porta que seu app usa
+    restart: always
+
   postgres:
     image: postgres:latest
     container_name: postgres_db
@@ -9,7 +25,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5433:5432"  # Alterado para 5433
+      - "5433:5432"  # Alterado para 5433 na máquina host
     restart: always
 
   mongodb:

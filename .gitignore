@@ -1,0 +1,110 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Cython debug symbols
+cython_debug/
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+pytest_cache/
+celerybeat-schedule
+.coverage.*
+.cache/
+
+# Translations
+*.mo
+*.pot
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Pytype type checker
+.pytype/
+
+# C extensions
+*.so
+
+# FastAPI
+*.db
+*.sqlite
+*.sqlite3
+alembic/versions/
+instance/
+.env.local
+.env.production
+.env.test
+.env.*.bak
+
+# Static files
+static/
+media/
+
+# Local settings
+.local/
+.env/
+
+# VS Code
+.vscode/
+
+# pyright
+typings/
+typings.json
+
+# Poetry
+poetry.lock
+poetry.toml
+.pdm.toml
+
+# PyCharm
+.idea/
+
+# pipenv
+Pipfile.lock
+
+# celery beat schedule files
+celerybeat-schedule
+
+# celery
+celerybeat.pid
+
+# pytest
+.pytest_cache/
+
+# all log files
+*.log

@@ -1,0 +1,12 @@
+fastapi
+pydantic
+gunicorn
+uvicorn[standard]
+tortoise-orm[asyncpg]
+aerich
+python-dotenv
+passlib
+pyjwt
+python-jose
+python-multipart
+email-validator

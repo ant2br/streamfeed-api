@@ -21,7 +21,7 @@ mongo_collection = "quotes"
 
 
 # Conectando ao MongoDB com autenticação
-client = MongoClient("mongodb://your_user:your_password@localhost:27017/")
+client = MongoClient("mongodb://your_user:your_password@mongodb:27017/")
 db = client[mongo_db]
 collection = db[mongo_collection]
 

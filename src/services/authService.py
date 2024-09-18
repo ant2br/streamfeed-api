@@ -1,15 +1,14 @@
 from datetime import datetime, timedelta
 from typing import Optional
-from jose import JWTError, jwt
+import jwt
 from passlib.context import CryptContext
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from src.dto.user import UserCreateDTO
 from src.models.user import User
 from dotenv import load_dotenv
 import os
-load_dotenv()
 
+load_dotenv()
 
 # Configurações para JWT
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -19,7 +18,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/users/token")
 
 class AuthService:
-    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__default_rounds=12)
 
     @staticmethod
     def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -41,7 +40,9 @@ class AuthService:
         try:
             decoded_jwt = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             return decoded_jwt
-        except JWTError:
+        except jwt.ExpiredSignatureError:
+            raise HTTPException(status_code=401, detail="Token has expired")
+        except jwt.InvalidTokenError:
             raise HTTPException(status_code=401, detail="Invalid token")
 
     @staticmethod
@@ -66,6 +67,8 @@ class AuthService:
             user = await User.filter(username=username).first()
             if user is None:
                 raise credentials_exception
-        except JWTError:
+        except HTTPException as e:
+            raise e
+        except Exception:
             raise credentials_exception
         return user

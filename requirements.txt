@@ -7,7 +7,6 @@ aerich
 python-dotenv
 passlib
 pyjwt
-python-jose
 python-multipart
 email-validator
 pymongo

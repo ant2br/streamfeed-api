@@ -1,30 +1,40 @@
-# Utiliza uma imagem oficial do Python 3.12
-FROM python:3.12-slim
+FROM python:3.12-alpine AS builder  
 
-# Cria um diretório de trabalho
-WORKDIR /app
+ENV LANG=C.UTF-8
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Copia os arquivos requirements.txt para o diretório de trabalho
-COPY requirements.txt .
+WORKDIR /app  
 
-# Instala as dependências necessárias
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt .  
 
-# Instala o Gunicorn
-RUN pip install gunicorn
+RUN apk add --no-cache gcc musl-dev \
+    && pip install --no-cache-dir -r requirements.txt \
+    && pip install gunicorn \
+    && apk del gcc musl-dev  
 
-# Cria um usuário não-root
-RUN useradd -m appuser
-USER appuser
+RUN pip install --upgrade pip setuptools
 
-# Copia o código da aplicação para o diretório de trabalho e define a propriedade
-COPY --chown=appuser:appuser . .
 
-# Define a variável de ambiente para o FastAPI
-ENV FASTAPI_ENV=production
+RUN adduser -D appuser  
 
-# Expõe a porta 8000 para acesso externo
-EXPOSE 8000
+FROM python:3.12-alpine  
 
-# Comando para rodar a aplicação com Gunicorn usando Uvicorn como worker
+ENV PYTHONUNBUFFERED=1
+ENV PATH="/venv/bin:$PATH"
+
+WORKDIR /app  
+
+COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages  
+COPY --from=builder /usr/local/bin/gunicorn /usr/local/bin/gunicorn  
+
+RUN adduser -D appuser  
+USER appuser  
+
+COPY --chown=appuser:appuser . .  
+
+ENV FASTAPI_ENV=production  
+
+EXPOSE 8000  
+
 CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "src.main:app", "--bind", "0.0.0.0:8000"]

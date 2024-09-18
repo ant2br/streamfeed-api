@@ -32,7 +32,7 @@ async def websocket_endpoint():
     
     quotes = list(collection.find({}, {'_id': 0}))
     kc_quotes = [quote for quote in quotes if quote['symbol'].startswith('KC')]
-    dol_quotes = [quote for quote in quotes if quote['symbol'].startswith('DOL')]
+    dol_quotes = [quote for quote in quotes if quote['symbol'].startswith('DOL') or 'CURVA DE DOLAR 360D' in quote['symbol'] or 'PTAX800' in quote['symbol']]
     response = {'KC': kc_quotes, 'DOL': dol_quotes}
     return response
 
@@ -49,7 +49,7 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             quotes = list(collection.find({}, {'_id': 0}))
             kc_quotes = [quote for quote in quotes if quote['symbol'].startswith('KC')]
-            dol_quotes = [quote for quote in quotes if quote['symbol'].startswith('DOL')]
+            dol_quotes = [quote for quote in quotes if quote['symbol'].startswith('DOL') or 'CURVA DE DOLAR 360D' in quote['symbol'] or 'PTAX800' in quote['symbol']]
             response = {'KC': kc_quotes, 'DOL': dol_quotes}
             await websocket.send_text(json.dumps(response, indent=2))
             

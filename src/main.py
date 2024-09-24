@@ -51,7 +51,7 @@ DATABASE_URL = os.getenv('DATABASE_URL')  # Usa a variável de ambiente ou um pa
 
 register_tortoise(
     app,
-    db_url="asyncpg://teste:teste@64.23.196.60:5433/teste",
+    db_url="asyncpg://main_user:mysecretpassword@postgres:5432/moedas",
     modules={"models": ["src.models"]},  # Ajuste o módulo conforme sua estrutura de projeto
     add_exception_handlers=True,
 )

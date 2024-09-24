@@ -6,7 +6,7 @@ load_dotenv()
 
 TORTOISE_ORM = {
     "connections": {
-        "default": "asyncpg://teste:teste@64.23.196.60:5433/teste",
+        "default": "asyncpg://main_user:mysecretpassword@postgres:5432/moedas",
     },
     "apps": {
         "models": {

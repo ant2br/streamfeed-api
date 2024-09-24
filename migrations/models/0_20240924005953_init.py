@@ -9,6 +9,7 @@ async def upgrade(db: BaseDBAsyncClient) -> str:
     "is_active" BOOL NOT NULL  DEFAULT True,
     "differential" DECIMAL(10,2) NOT NULL,
     "symbol" VARCHAR(50) NOT NULL,
+    "symbolDol" VARCHAR(50),
     "tenant" INT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS "symbols" (

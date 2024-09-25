@@ -30,7 +30,7 @@ async def read_user(user_id: int, current_user: User = Depends(AuthService.get_c
     return user  # Retorna o objeto ORM diretamente, o Pydantic cuidará da conversão
 
 @users_router.post("/")
-async def create_user_endpoint(item: UserCreateDTO, current_user: User = Depends(AuthService.get_current_user)):
+async def create_user_endpoint(item: UserCreateDTO):
     return await users_service.inserir_usuario(item)
 
 @users_router.put("/{user_id}")

@@ -16,6 +16,22 @@ class UsersService:
 
     async def obter_usuario(self, id: int) -> Optional[User]:
         return await User.filter(id=id).first()
+    
+    
+    async def alterar_senha(self, user_id: int, nova_senha: str) -> Optional[User]:
+
+        user = await User.filter(id=user_id).first()
+        if not user:
+            return None
+        
+        # Criptografa a nova senha
+        user.hashed_password = self.hash_password(nova_senha)
+        
+        # Salva o usuário com a nova senha no banco de dados
+        await user.save()
+        
+        return user
+
 
     async def inserir_usuario(self, item: UserCreateDTO) -> User:
         hashed_password = self.hash_password(item.password)  # Criptografa a senha

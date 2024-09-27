@@ -2,7 +2,7 @@
 from typing import Optional
 from fastapi import APIRouter, Depends, Form, HTTPException
 from src.models.user import User
-from src.dto.user import UserCreateDTO, Token, LoginBody, UserResponseDTO, UserUpdateDTO
+from src.dto.user import PasswordChangeDTO, UserCreateDTO, Token, LoginBody, UserResponseDTO, UserUpdateDTO
 from src.services.UsersService import UsersService
 from src.services.authService import AuthService
 from datetime import timedelta
@@ -60,7 +60,39 @@ async def login(form_data: LoginBody):
     return {"access_token": access_token, "token_type": "bearer"}
 
 
+@users_router.post("/change-password")
+async def change_password(
+    body: PasswordChangeDTO, 
+    current_user: User = Depends(AuthService.get_current_user)
+):
 
+    if not AuthService.verify_password(body.old_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Old password is incorrect")
+    
+    if body.new_password != body.confirm_password:
+        raise HTTPException(status_code=400, detail="New password and confirmation do not match")
+    
+    await users_service.alterar_senha(current_user.id, body.new_password)
+    
+    return {"detail": "Password changed successfully"}
+@users_router.post("/{user_id}/reset-password")
+async def reset_password(user_id: int, current_user: User = Depends(AuthService.get_current_user)):
+
+    # Busca o usuário no banco de dados
+    user = await users_service.obter_usuario(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Define uma nova senha temporária
+    nova_senha = "Alterar123@"
+    
+    # Atualiza a senha do usuário no banco de dados
+    await users_service.alterar_senha(user_id, nova_senha)
+    
+    # Opcional: Enviar um email ao usuário com a nova senha
+    # await email_service.enviar_email_reset_senha(user.email, nova_senha)
+    
+    return {"detail": "Password reset successfully"}
 
 @users_router.post("/token", response_model=Token, include_in_schema=False)
 async def login(

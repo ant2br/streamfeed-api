@@ -35,3 +35,7 @@ class UserUpdateDTO(BaseModel):
     full_name: Optional[str] = None
     is_active: bool
 
+class PasswordChangeDTO(BaseModel):
+    old_password: str
+    new_password: str
+    confirm_password: str

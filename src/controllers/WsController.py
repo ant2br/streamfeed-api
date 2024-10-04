@@ -16,6 +16,11 @@ ws_router = APIRouter(
     tags=["Ws"]
 )
 
+wss_router = APIRouter(
+    prefix="/ws",
+    tags=["Ws"]
+)
+
 mongo_db = "symbols"
 mongo_collection = "quotes"
 
@@ -27,7 +32,7 @@ collection = db[mongo_collection]
 
 
 
-@ws_router.get("/symbols")
+@wss_router.get("/symbols")
 async def websocket_endpoint():
     
     quotes = list(collection.find({}, {'_id': 0}))

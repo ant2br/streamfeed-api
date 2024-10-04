@@ -5,6 +5,8 @@ from src.controllers.UsersController import users_router
 from src.controllers.WsController import ws_router
 from src.controllers.SymbolsController import symbols_router
 from src.controllers.IndicatorsController import indicators_router
+from src.controllers.PermissionsController import permissions_router
+#from src.controllers.PermissionsGroupsController import permission_groups_router
 
 from dotenv import load_dotenv
 import os
@@ -37,8 +39,12 @@ app.add_middleware(
 
 app.include_router(users_router, prefix="/api")
 app.include_router(ws_router, prefix="/api")
+app.include_router(ws_router, prefix="/ws")
+
 app.include_router(indicators_router, prefix="/api")
 app.include_router(symbols_router, prefix="/api")
+#app.include_router(permission_groups_router , prefix="/api")
+app.include_router(permissions_router  , prefix="/api")
 
 
 

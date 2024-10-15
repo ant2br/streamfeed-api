@@ -10,13 +10,7 @@ import json
 import asyncio
 
 
-
 ws_router = APIRouter(
-    prefix="/ws",
-    tags=["Ws"]
-)
-
-wss_router = APIRouter(
     prefix="/ws",
     tags=["Ws"]
 )
@@ -31,10 +25,8 @@ db = client[mongo_db]
 collection = db[mongo_collection]
 
 
-
-@wss_router.get("/symbols")
-async def websocket_endpoint():
-    
+@ws_router.get("/symbols")
+async def websocket_endpoint() -> dict:
     quotes = list(collection.find({}, {'_id': 0}))
     kc_quotes = [quote for quote in quotes if quote['symbol'].startswith('KC')]
     dol_quotes = [quote for quote in quotes if quote['symbol'].startswith('DOL') or 'CURVA DE DOLAR 360D' in quote['symbol'] or 'PTAX800' in quote['symbol']]
@@ -42,31 +34,21 @@ async def websocket_endpoint():
     return response
 
 
-
-
-
-@ws_router.websocket("/ws")
+@ws_router.websocket("/")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    
-    
+
     try:
         while True:
             quotes = list(collection.find({}, {'_id': 0}))
             kc_quotes = [quote for quote in quotes if quote['symbol'].startswith('KC')]
             dol_quotes = [quote for quote in quotes if quote['symbol'].startswith('DOL') or 'CURVA DE DOLAR 360D' in quote['symbol'] or 'PTAX800' in quote['symbol']]
             response = {'KC': kc_quotes, 'DOL': dol_quotes}
-            await websocket.send_text(json.dumps(response, indent=2))
-            
+            await websocket.send_text(json.dumps(response))
+
             await asyncio.sleep(10)
     except WebSocketDisconnect:
         print("Cliente desconectado do WebSocket")
     except Exception as e:
         print(f"Erro no WebSocket: {e}")
-
         await websocket.close(code=1000)
-
-        
-        
-        
-

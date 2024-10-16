@@ -53,9 +53,12 @@ async def login(form_data: LoginBody):
     user = await AuthService.authenticate_user(form_data.username.lower(), form_data.password)
     if not user:
         raise HTTPException(status_code=401, detail="Incorrect username or password")
-    access_token_expires = timedelta(minutes=30)
+    
+
+    access_token_expires = timedelta(minutes=60)
     access_token = AuthService.create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.username}, expires_delta=access_token_expires,
+        no_expiration=user.never_expire
     )
     return {"access_token": access_token, "token_type": "bearer"}
 

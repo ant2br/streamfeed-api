@@ -25,13 +25,18 @@ class AuthService:
         return AuthService.pwd_context.verify(plain_password, hashed_password)
 
     @staticmethod
-    def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    def create_access_token(data: dict, expires_delta: Optional[timedelta] = None, no_expiration: bool = False) -> str:
         to_encode = data.copy()
-        if expires_delta:
-            expire = datetime.utcnow() + expires_delta
+        if no_expiration:
+            # Se no_expiration for True, não define a expiração
+            to_encode.update({"exp": None})  # Não define o expira
         else:
-            expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        to_encode.update({"exp": expire})
+            if expires_delta:
+                expire = datetime.utcnow() + expires_delta
+            else:
+                expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+            to_encode.update({"exp": expire})
+        
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
         return encoded_jwt
 

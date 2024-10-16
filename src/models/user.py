@@ -11,6 +11,7 @@ class User(Model):
     is_active = fields.BooleanField(default=True)             # Indica se o usuário está ativo
     is_superuser = fields.BooleanField(default=False)         # Indica se o usuário é um administrador
     tenant = fields.IntField()
+    never_expire = fields.BooleanField(default=False)
 
     class Meta:
         table = "users"  # Nome da tabela no banco de dados

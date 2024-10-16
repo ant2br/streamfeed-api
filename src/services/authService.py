@@ -28,8 +28,7 @@ class AuthService:
     def create_access_token(data: dict, expires_delta: Optional[timedelta] = None, no_expiration: bool = False) -> str:
         to_encode = data.copy()
         if no_expiration:
-            # Se no_expiration for True, não define a expiração
-            to_encode.update({"exp": None})  # Não define o expira
+            to_encode.update({"exp": datetime.utcnow() + timedelta(days=365)})
         else:
             if expires_delta:
                 expire = datetime.utcnow() + expires_delta

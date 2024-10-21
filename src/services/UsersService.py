@@ -42,7 +42,9 @@ class UsersService:
             hashed_password=hashed_password,  # Usa a senha criptografada
             is_active=True,
             is_superuser=False,
-            tenant=1
+            tenant=1,
+            permissionGroupId = item.permissionGroupId
+
         )
         return user
 
@@ -54,6 +56,7 @@ class UsersService:
             user.full_name = item.full_name
             user.is_active = item.is_active
             user.is_superuser = False
+            user.permissionGroupId = item.permissionGroupId
             await user.save()
             return user
         return None

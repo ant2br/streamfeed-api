@@ -12,6 +12,6 @@ class User(Model):
     is_superuser = fields.BooleanField(default=False)         # Indica se o usuário é um administrador
     tenant = fields.IntField()
     never_expire = fields.BooleanField(default=False)
-
+    permissionGroupId = fields.IntField(null=True)
     class Meta:
         table = "users"  # Nome da tabela no banco de dados

@@ -7,6 +7,8 @@ class UserResponseDTO(BaseModel):
     email: str
     full_name: Optional[str] = None
     is_active: bool
+    permissionGroupId: Optional[int] = None  # Permitir valores nulos
+    
 
     class Config:
         from_attributes = True
@@ -16,6 +18,8 @@ class UserCreateDTO(BaseModel):
     email: str
     full_name: Optional[str] = None
     password: str
+    permissionGroupId: Optional[int] = None  # Permitir valores nulos
+
     
     
 class Token(BaseModel):
@@ -34,6 +38,8 @@ class UserUpdateDTO(BaseModel):
     email: str
     full_name: Optional[str] = None
     is_active: bool
+    permissionGroupId: Optional[int] = None  # Permitir valores nulos
+
 
 class PasswordChangeDTO(BaseModel):
     old_password: str
